@@ -1,0 +1,34 @@
+{
+    "name": "BreathControls",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "7d90000d-2b40-4e4f-9629-07de586a4484",
+            "actions": [
+                {
+                    "name": "Blow",
+                    "type": "Button",
+                    "id": "02c8641f-f358-4aa1-8d36-dbe160214b33",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "bce96e11-7e8c-4b6b-badb-05089d05c167",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Blow",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
