@@ -18,31 +18,25 @@ public class BreathInputHandler : MonoBehaviour
     [Header("Interface utilisateur")]
     public Slider breathSlider;
 
-    private BreathControls controls;
 
-    private void Awake()
+    void Start()
     {
-        controls= new BreathControls();
-
-        //commence a souffler quand la touche est presse
-
-        controls.Player.Blow.started += ctx => isBlowing = true;
-
-        //arrete de souffler quand la touche est relache
-
-        controls.Player.Blow.canceled += ctx => isBlowing = false;
+        var input = GetComponent<PlayerInput>();
+        //Debug.Log($"{gameObject.name} 当前输入 Map：{input.currentActionMap?.name}");
     }
 
-    private void OnEnable()
+    public void OnBlow(InputAction.CallbackContext context)//appele automatiquement par PlayerInput
     {
-        controls.Enable();//activite les controles
+        //Debug.Log($"[OnBlow] {gameObject.name} phase: {context.phase}");
+        if (context.performed)
+        {
+            isBlowing = true;
+        }
+        else if(context.canceled) 
+        {
+            isBlowing = false;
+        }
     }
-
-    private void OnDisable()
-    {
-         controls.Disable();//desactive
-    }
-
 
     // Update is called once per frame
     void Update()
@@ -72,6 +66,8 @@ public class BreathInputHandler : MonoBehaviour
             breathSlider.value = breathStrength;
         }
 
-        Debug.Log("呼吸强度: " + breathStrength);
+        Debug.Log($"{gameObject.name} | isBlowing: {isBlowing} | breathStrength: {breathStrength}");
+        
+        
     }
 }

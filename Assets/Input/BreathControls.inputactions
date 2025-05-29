@@ -19,10 +19,21 @@
                 {
                     "name": "",
                     "id": "bce96e11-7e8c-4b6b-badb-05089d05c167",
-                    "path": "<Keyboard>/space",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Keyboard1",
+                    "action": "Blow",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "48ac3dbb-4774-45d1-903a-db9ebd14182b",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard2",
                     "action": "Blow",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -30,5 +41,33 @@
             ]
         }
     ],
-    "controlSchemes": []
+    "controlSchemes": [
+        {
+            "name": "Keyboard1",
+            "bindingGroup": "Keyboard1",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "Keyboard2",
+            "bindingGroup": "Keyboard2",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": true,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
 }
