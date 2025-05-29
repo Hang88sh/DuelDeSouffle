@@ -44,7 +44,7 @@ public class BreathInputHandler : MonoBehaviour
         //mise a jour de la force de souffle
         if (isBlowing)
         {
-            breathStrength = Mathf.MoveTowards(breathStrength, 1f, Time.deltaTime * increaseSpeed);
+             breathStrength = Mathf.MoveTowards(breathStrength, 1f, Time.deltaTime * increaseSpeed); 
         }
         else
         {
@@ -66,8 +66,42 @@ public class BreathInputHandler : MonoBehaviour
             breathSlider.value = breathStrength;
         }
 
-        Debug.Log($"{gameObject.name} | isBlowing: {isBlowing} | breathStrength: {breathStrength}");
-        
-        
+        Debug.Log($"{gameObject.name} | isBlowing: {isBlowing} | breathStrength: {breathStrength}");          
+    }
+
+    public void OnMessageArrived(string msg)
+    {
+        if (float.TryParse(msg, out float value) && value > 0)
+        {
+            if (value < 10f)
+            {
+                // too weak
+                isBlowing = false;
+                Debug.Log("Souffle trop faible");
+            }
+            else if (value > 20f)
+            {
+                // too strong
+                isBlowing = false;
+                Debug.Log("Souffle trop fort");
+            }
+            else
+            {
+                // valid range: set isBlowing to true and normalize the value
+                isBlowing = true;
+                breathStrength = Mathf.InverseLerp(10f, 20f, value); // maps 10–20 to 0–1
+                Debug.Log($"Souffle valide: {value} → strength = {breathStrength:F2}");
+            }
+        }
+        else
+        {
+            isBlowing = false;
+            Debug.LogWarning($"Valeur invalide ou nulle reçue: '{msg}'");
+        }
+    }
+
+    public void OnConnectionEvent(bool success)
+    {
+        Debug.Log(success ? "Device connected" : "Device disconnected");
     }
 }
