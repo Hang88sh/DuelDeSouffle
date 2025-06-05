@@ -68,6 +68,7 @@ public class BallPoolManager : MonoBehaviour
             rb.angularVelocity=Vector3.zero;
             rb.linearVelocity = Vector3.zero;
             rb.AddForce(Vector3.up*5f,ForceMode.Impulse);
+           
         }
 
         //remet la balle dans le pool pour reutilisation plus tard

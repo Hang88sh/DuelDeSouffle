@@ -18,22 +18,26 @@ public class ScreenBoundaryBuilder : MonoBehaviour
             targetCamera= Camera.main;
 
         //Distance a laquelle les murs seront positionnes
-        float zDistance = Mathf.Abs(targetCamera.transform.position.z);
+        float zWorld = 0f;
+        float distanceFromCamera = Mathf.Abs(zWorld - targetCamera.transform.position.z);
+
 
         //coins visibles de l'ecran en coordonnees mode
-        Vector3 bottomLeft=targetCamera.ScreenToWorldPoint(new Vector3(0,0,zDistance));
-        Vector3 topRight=targetCamera.ScreenToWorldPoint(new Vector3(Screen.width,Screen.height,zDistance));
-        
+        Vector3 bottomLeft = targetCamera.ViewportToWorldPoint(new Vector3(0, 0, distanceFromCamera));
+        Vector3 topRight= targetCamera.ViewportToWorldPoint(new Vector3(1, 1, distanceFromCamera));
+
         float width=topRight.x-bottomLeft.x;
         float height=topRight.y-bottomLeft.y;
         float centerX = (topRight.x + bottomLeft.x) / 2f;
         float centerY = (topRight.y + bottomLeft.y) / 2f;
 
+        float bottomWallThickness = 0.5f;
+
         //creer les 4 murs invisibles
-        CreateWall("murHaut", new Vector3(centerX, topRight.y + wallThickness / 2f, 0), new Vector3(width + 2f, wallThickness, wallDepth));
-        CreateWall("murBas", new Vector3(centerX, bottomLeft.y - wallThickness / 2f, 0), new Vector3(width + 2f, wallThickness, wallDepth));
-        CreateWall("murGauche", new Vector3(bottomLeft.x-wallThickness/2f,centerY,0), new Vector3(wallThickness,height + 2f, wallDepth));
-        CreateWall("murDroit", new Vector3(topRight.x+wallThickness/2f,centerY,0), new Vector3(wallThickness, height + 2f, wallDepth));
+        CreateWall("murBas", new Vector3(centerX, bottomLeft.y + bottomWallThickness / 2f-0.31f, zWorld), new Vector3(width + 2f, bottomWallThickness, wallDepth));
+        CreateWall("murHaut", new Vector3(centerX, topRight.y + wallThickness / 2f, zWorld), new Vector3(width + 2f, wallThickness, wallDepth));
+        CreateWall("murGauche", new Vector3(bottomLeft.x - wallThickness / 2f, centerY, zWorld), new Vector3(wallThickness, height + 2f, wallDepth));
+        CreateWall("murDroit", new Vector3(topRight.x + wallThickness / 2f, centerY, zWorld), new Vector3(wallThickness, height + 2f, wallDepth));
 
     }
 

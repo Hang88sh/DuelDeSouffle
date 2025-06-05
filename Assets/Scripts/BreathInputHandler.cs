@@ -15,6 +15,10 @@ public class BreathInputHandler : MonoBehaviour
     private float breathStrength = 0f;//Force actuelle
     private bool isBlowing=false;//État : souffler ou non
 
+    public PersistentBreathText persistentText;
+    private string currentPhase = "";
+    private bool hasActivatedText = false;
+
     [Header("Interface utilisateur")]
     public Slider breathSlider;
 
@@ -22,7 +26,18 @@ public class BreathInputHandler : MonoBehaviour
     void Start()
     {
         var input = GetComponent<PlayerInput>();
-        //Debug.Log($"{gameObject.name} 当前输入 Map：{input.currentActionMap?.name}");
+        //Debug.Log($"{gameObject.name}  Map：{input.currentActionMap?.name}");
+
+        if (persistentText == null)
+        {
+            persistentText = FindFirstObjectByType<PersistentBreathText>();
+            if (persistentText != null)
+                Debug.Log($"[AutoBind] Texte lié automatiquement : {persistentText.name}");
+            else
+                Debug.LogWarning("Aucun objet PersistentBreathText trouvé dans la scène !");
+        }
+        if (persistentText != null)
+            persistentText.gameObject.SetActive(false);
     }
 
     public void OnBlow(InputAction.CallbackContext context)//appele automatiquement par PlayerInput
@@ -39,34 +54,97 @@ public class BreathInputHandler : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void Update()    
     {
-        //mise a jour de la force de souffle
+        // Mise à jour de la force simulée selon l'entrée souris/clavier
         if (isBlowing)
         {
-             breathStrength = Mathf.MoveTowards(breathStrength, 1f, Time.deltaTime * increaseSpeed); 
+            float simulatedValue = Mathf.MoveTowards(breathStrength * 10f + 10f, 20f, Time.deltaTime * increaseSpeed * 10f);
+            breathStrength = Mathf.InverseLerp(10f, 20f, simulatedValue);
         }
         else
         {
-            breathStrength = Mathf.MoveTowards(breathStrength, 0f, Time.deltaTime * decreaseSpeed);
+            float simulatedValue = Mathf.MoveTowards(breathStrength * 10f + 10f, 10f, Time.deltaTime * decreaseSpeed * 10f);
+            breathStrength = Mathf.InverseLerp(10f, 20f, simulatedValue);
         }
 
-        //limiter entre 0 et 1
-        breathStrength = Mathf.Clamp01(breathStrength);
+        breathStrength = Mathf.Clamp01(breathStrength); // Clamp entre 0 et 1
 
-        //appliquer la force vers le haut
-        if(ballRb != null)
+        // Calcul de la force de montée
+        if (ballRb != null)
         {
-            ballRb.AddForce(Vector3.up * breathStrength * maxUpForce, ForceMode.Force);
+            float g = Physics.gravity.magnitude; // ~9.81
+            float mass = ballRb.mass;
+            float liftForce = mass * g;
+
+            float inputValue = Mathf.Lerp(10f, 20f, breathStrength);
+            float appliedForce = 0f;
+
+            if (isBlowing)
+            {
+                if (inputValue < 10f)
+                {
+                    float factor = Mathf.InverseLerp(0f, 10f, inputValue);
+                    appliedForce = Mathf.Lerp(0f, liftForce * 0.8f, factor);
+                    Debug.Log("Souffle insuffisant.");
+                }
+                else if (inputValue <= 20f)
+                {
+                    appliedForce = liftForce;
+                    Debug.Log("Souffle optimal !");
+                }
+                else
+                {
+                    float factor = Mathf.InverseLerp(20f, 30f, inputValue);
+                    appliedForce = Mathf.Lerp(liftForce, liftForce * 2f, factor);
+                    Debug.Log("Souffle trop fort !");
+                }
+
+                ballRb.AddForce(Vector3.up * appliedForce, ForceMode.Force);
+            }
         }
 
-        //mettre a jour a l'intyerface
-        if(breathSlider != null)
+        if (breathSlider != null)
         {
             breathSlider.value = breathStrength;
         }
 
-        Debug.Log($"{gameObject.name} | isBlowing: {isBlowing} | breathStrength: {breathStrength}");          
+        if (!hasActivatedText && isBlowing && persistentText != null)//Affichage une seule fois après la première activation
+        {
+            persistentText.gameObject.SetActive(true);
+            hasActivatedText = true;
+        }
+
+        //Toujours détecter la phase même après arrêt du souffle
+        if (persistentText != null && hasActivatedText)
+        {
+            string newPhase = "";
+
+            if (breathStrength < 0.3f)
+                newPhase = "low";
+            else if (breathStrength > 0.8f)
+                newPhase = "high";
+            else
+                newPhase = "normal";
+
+            if (newPhase != currentPhase)
+            {
+                currentPhase = newPhase;
+
+                switch (newPhase)
+                {
+                    case "low":
+                        persistentText.SetText("Allez!!", Color.yellow, -15f);
+                        break;
+                    case "high":
+                        persistentText.SetText("Trop Fort!!", Color.red, 20f);
+                        break;
+                    case "normal":
+                        persistentText.SetText("Parfait!!", Color.green, 0f);
+                        break;
+                }
+            }
+        }
     }
 
     public void OnMessageArrived(string msg)

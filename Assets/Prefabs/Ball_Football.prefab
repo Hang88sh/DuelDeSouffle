@@ -13,6 +13,10 @@ GameObject:
   - component: {fileID: 7188212003585862059}
   - component: {fileID: 3071025896724229319}
   - component: {fileID: 6354331426983761435}
+  - component: {fileID: 3630913258250807239}
+  - component: {fileID: -5931300327206462726}
+  - component: {fileID: -683392311495622151}
+  - component: {fileID: -9110593090366909273}
   m_Layer: 0
   m_Name: Ball_Football
   m_TagString: Untagged
@@ -30,7 +34,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -136,3 +140,100 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.1366302
   m_Center: {x: 0.000000007450581, y: 0.0000000037252903, z: 0}
+--- !u!114 &3630913258250807239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 434113272898321723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c151dfcd0726414d81beb9484bf1732, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 3071025896724229319}
+  masse: 1.5
+  facteurEchelle: 0.5
+  masseMin: 0.1
+  masseMax: 10
+--- !u!114 &-5931300327206462726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 434113272898321723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b039a7ea250ec5748b2bfd781ac82a4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ballRb: {fileID: 3071025896724229319}
+  maxUpForce: 50
+  increaseSpeed: 1
+  decreaseSpeed: 1
+  breathSlider: {fileID: 0}
+--- !u!114 &-683392311495622151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 434113272898321723}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bc5f48af2cffd747a079fe8c632e2c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  portName: COM1
+  baudRate: 9600
+  messageListener: {fileID: 434113272898321723}
+  reconnectionDelay: 1000
+  maxUnreadMessages: 1
+--- !u!114 &-9110593090366909273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 434113272898321723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 03731a9861d08a9449d6384b82da27b3, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -5931300327206462726}
+        m_TargetAssemblyTypeName: BreathInputHandler, Assembly-CSharp
+        m_MethodName: OnBlow
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 02c8641f-f358-4aa1-8d36-dbe160214b33
+    m_ActionName: 'Player/Blow[/Keyboard/leftShift,/Mouse/leftButton]'
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: Keyboard1
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
