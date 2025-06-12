@@ -45,15 +45,15 @@ public class BallInitializer : MonoBehaviour
         }
 
         handler.ballRb = rb;
-        handler.maxUpForce = 50f;
+        //handler.maxUpForce = 50f;
         handler.increaseSpeed = 1f;
         handler.decreaseSpeed = 1f;
 
         
 
-        if (breathSlider!=null)
-        {
-            handler.breathSlider = breathSlider;
-        }
+        //if (breathSlider!=null)
+        //{
+        //    handler.breathSlider = breathSlider;
+        //}
     }
 }
