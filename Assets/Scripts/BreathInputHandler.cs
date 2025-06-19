@@ -29,6 +29,7 @@ public class BreathInputHandler : MonoBehaviour
     private string lastPhase = "";
 
     private bool forceAppliedThisBreath = false;
+    
 
     public void OnBlow(InputAction.CallbackContext context)
     {
@@ -107,8 +108,20 @@ public class BreathInputHandler : MonoBehaviour
     // Met à jour la jauge visuelle (slider ou cercle)
     void UpdateUI()
     {
-        if (roundGauge != null)
+        if (roundGauge == null) return;
+
+        bool isStillBreathing = timeSinceLastValidInput < stopGracePeriod;
+
+        if (isStillBreathing)
+        {
+            
             roundGauge.SetValue(breathStrength, false, 2f);
+        }
+        else
+        {
+            
+            roundGauge.SetValue(0f, false, 2f);
+        }
     }
 
     void UpdateBreathZoneText()

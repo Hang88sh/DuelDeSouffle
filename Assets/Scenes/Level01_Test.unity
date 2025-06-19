@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 41841766}
   - component: {fileID: 41841765}
   - component: {fileID: 41841764}
+  - component: {fileID: 41841768}
   m_Layer: 0
   m_Name: Background_Near_Mountains
   m_TagString: Untagged
@@ -223,11 +224,25 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 3}
-  m_LocalScale: {x: 12, y: 5, z: 1}
+  m_LocalScale: {x: 16.954674, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &41841768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41841763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d020f58456f5f147ac3183a3e23a777, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 63384363}
+  desiredHeight: 10
 --- !u!1 &63384361
 GameObject:
   m_ObjectHideFlags: 0
@@ -289,7 +304,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 65
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -594,6 +609,8 @@ GameObject:
   - component: {fileID: 220667978}
   - component: {fileID: 220667977}
   - component: {fileID: 220667976}
+  - component: {fileID: 220667980}
+  - component: {fileID: 220667981}
   m_Layer: 0
   m_Name: Background_Cloud
   m_TagString: Untagged
@@ -686,11 +703,40 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 2, z: 4}
-  m_LocalScale: {x: 7.5, y: 4.5, z: 1}
+  m_LocalScale: {x: 16.954674, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &220667980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220667975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d020f58456f5f147ac3183a3e23a777, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 63384363}
+  desiredHeight: 10
+--- !u!114 &220667981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220667975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e8ee6a06feb71b47a718d9bf9d53f98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  motionType: 0
+  amplitude: 0.5
+  speed: 1
 --- !u!1 &369748713
 GameObject:
   m_ObjectHideFlags: 0
@@ -1172,6 +1218,7 @@ GameObject:
   - component: {fileID: 748677715}
   - component: {fileID: 748677714}
   - component: {fileID: 748677713}
+  - component: {fileID: 748677717}
   m_Layer: 0
   m_Name: Background_Mountains
   m_TagString: Untagged
@@ -1264,11 +1311,25 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 3.5}
-  m_LocalScale: {x: 13, y: 5, z: 1}
+  m_LocalScale: {x: 16.954674, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &748677717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 748677712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d020f58456f5f147ac3183a3e23a777, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 63384363}
+  desiredHeight: 10
 --- !u!1 &784917687
 GameObject:
   m_ObjectHideFlags: 0
@@ -1885,6 +1946,7 @@ GameObject:
   - component: {fileID: 1635554879}
   - component: {fileID: 1635554878}
   - component: {fileID: 1635554877}
+  - component: {fileID: 1635554881}
   m_Layer: 0
   m_Name: Background_Sky
   m_TagString: Untagged
@@ -1977,11 +2039,25 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.5, z: 5}
-  m_LocalScale: {x: 17, y: 9, z: 1}
+  m_LocalScale: {x: 16.954674, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1635554881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635554876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d020f58456f5f147ac3183a3e23a777, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 63384363}
+  desiredHeight: 10
 --- !u!1 &1668413663
 GameObject:
   m_ObjectHideFlags: 0
@@ -1994,6 +2070,8 @@ GameObject:
   - component: {fileID: 1668413666}
   - component: {fileID: 1668413665}
   - component: {fileID: 1668413664}
+  - component: {fileID: 1668413668}
+  - component: {fileID: 1668413669}
   m_Layer: 0
   m_Name: Background_tree
   m_TagString: Untagged
@@ -2086,11 +2164,40 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 2.5}
-  m_LocalScale: {x: 11, y: 5, z: 1}
+  m_LocalScale: {x: 16.954674, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1668413668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668413663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d020f58456f5f147ac3183a3e23a777, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 63384363}
+  desiredHeight: 10
+--- !u!114 &1668413669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668413663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e8ee6a06feb71b47a718d9bf9d53f98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  motionType: 1
+  amplitude: 0.5
+  speed: 1
 --- !u!1 &1769042936
 GameObject:
   m_ObjectHideFlags: 0
