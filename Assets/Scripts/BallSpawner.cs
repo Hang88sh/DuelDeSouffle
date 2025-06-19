@@ -7,7 +7,7 @@ public class BallSpawner : MonoBehaviour
     public BallPoolManager ballPoolManager;
     public SFXManager sfxManager;
 
-
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -51,21 +51,62 @@ public class BallSpawner : MonoBehaviour
             Debug.LogWarning("SFXManager non assigné !");
         }
 
-        Slider uiSlider = GameObject.FindFirstObjectByType<Slider>();
-        if (uiSlider == null)
-        {
-            Debug.LogWarning("Aucun Slider trouvé dans la scène.");
-        }
+        //Slider uiSlider = GameObject.FindFirstObjectByType<Slider>();
+        //if (uiSlider == null)
+        //{
+        //    Debug.LogWarning("Aucun Slider trouvé dans la scène.");
+        //}
 
         BreathInputHandler handler = newBall.GetComponent<BreathInputHandler>();
         if (handler != null)
         {
-            handler.breathSlider = uiSlider;
+            ImgsFillDynamic uiGauge = GameObject.FindFirstObjectByType<ImgsFillDynamic>();
+            if (uiGauge != null)
+            {
+                handler.roundGauge = uiGauge;
+                Debug.Log("Jauge dynamique assignée avec succès !");
+            }
+            else
+            {
+                Debug.LogWarning("Aucun composant ImgsFillDynamic trouvé dans la scène !");
+            }
+            PersistentBreathText breathText = GameObject.FindFirstObjectByType<PersistentBreathText>();
+            if (breathText != null)
+            {
+                handler.persistentText = breathText;
+                Debug.Log("Texte persistant assigné avec succès !");
+            }
+            else
+            {
+                Debug.LogWarning("Aucun PersistentBreathText trouvé dans la scène !");
+            }
+
         }
         else
         {
             Debug.LogWarning("BreathInputHandler introuvable sur la balle !");
         }
+
+        TargetZoneManager zoneManager = GameObject.FindFirstObjectByType<TargetZoneManager>();
+        if (zoneManager != null)
+        {
+            zoneManager.SetBall(newBall.transform);
+            Debug.Log("Ball assigned to TargetZoneManager.");
+        }
+        else
+        {
+            Debug.LogWarning("TargetZoneManager not found in scene.");
+        }
+
+        //BreathInputHandler handler = newBall.GetComponent<BreathInputHandler>();
+        //if (handler != null)
+        //{
+        //    handler.breathSlider = uiSlider;
+        //}
+        //else
+        //{
+        //    Debug.LogWarning("BreathInputHandler introuvable sur la balle !");
+        //}
     }
     void PlaySpawnEffect(Vector3 position)
     {
