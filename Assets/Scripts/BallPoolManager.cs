@@ -57,7 +57,9 @@ public class BallPoolManager : MonoBehaviour
         currentBall= ballPool.Dequeue();
 
         //place la balle au bon endroit
-        currentBall.transform.position=spawnPoint.position;
+        Vector3 spawnPos = spawnPoint.position;
+        spawnPos.z = 2f; 
+        currentBall.transform.position = spawnPos;
         currentBall.transform.rotation = Quaternion.identity;
         currentBall.SetActive(true);
 

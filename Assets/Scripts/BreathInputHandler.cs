@@ -31,6 +31,7 @@ public class BreathInputHandler : MonoBehaviour
     private bool forceAppliedThisBreath = false;
     
 
+
     public void OnBlow(InputAction.CallbackContext context)
     {
         isBlowing = context.performed;
@@ -93,15 +94,12 @@ public class BreathInputHandler : MonoBehaviour
 
         bool isStillBreathing = timeSinceLastValidInput < stopGracePeriod;
 
-        if (isStillBreathing && !forceAppliedThisBreath)
+        if (isStillBreathing)
         {
             float targetVelocity = Mathf.Lerp(0f, maxUpVelocity, breathStrength);
             Vector3 velocity = ballRb.linearVelocity;
             velocity.y = targetVelocity;
             ballRb.linearVelocity = velocity;
-
-            forceAppliedThisBreath = true;
-            Debug.Log($"Souffle appliqué une fois - vitesse Y: {velocity.y:F2}");
         }
     }
 
@@ -111,17 +109,9 @@ public class BreathInputHandler : MonoBehaviour
         if (roundGauge == null) return;
 
         bool isStillBreathing = timeSinceLastValidInput < stopGracePeriod;
+        float displayValue = isStillBreathing ? breathStrength : 0f;
 
-        if (isStillBreathing)
-        {
-            
-            roundGauge.SetValue(breathStrength, false, 2f);
-        }
-        else
-        {
-            
-            roundGauge.SetValue(0f, false, 2f);
-        }
+        roundGauge.SetValue(displayValue, true);
     }
 
     void UpdateBreathZoneText()

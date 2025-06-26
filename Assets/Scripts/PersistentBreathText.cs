@@ -34,4 +34,6 @@ public class PersistentBreathText : MonoBehaviour
     {
         shakeTween?.Kill();
     }
+
+    
 }
