@@ -1691,8 +1691,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 0fa847439a7d341419067387a8436999, type: 3}
+  m_Resource: {fileID: 8300000, guid: 0fa847439a7d341419067387a8436999, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -2097,7 +2097,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicSource: {fileID: 988900984}
-  chartJSON: {fileID: 4900000, guid: 059ef89de0ffa2148a754fab4362de7e, type: 3}
+  chartJSON: {fileID: 4900000, guid: 0fcf8875115ac304c88363d878a35dd3, type: 3}
   noteSpawner: {fileID: 1675839376}
 --- !u!4 &1354693067
 Transform:
@@ -2165,8 +2165,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b609aedc3fc65fe43a1e8775009cc414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballTag: Ball
-  heightTolerance: 0.5
+  scoreText: {fileID: 1922692422}
+  comboText: {fileID: 1204739231}
 --- !u!4 &1379482159
 Transform:
   m_ObjectHideFlags: 0
@@ -2686,9 +2686,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c5b9e3833f475044937251de65d4537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  notePrefab: {fileID: 3343126422155627986, guid: b7aef42d2874fea4ab82c993efc469f9, type: 3}
+  notePrefab: {fileID: 1815933435534038640, guid: b7aef42d2874fea4ab82c993efc469f9, type: 3}
   speed: 5
-  spawnX: 10
+  defaultZ: 2.5
+  laneCount: 3
 --- !u!4 &1675839377
 Transform:
   m_ObjectHideFlags: 0

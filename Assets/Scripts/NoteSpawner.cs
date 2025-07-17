@@ -1,25 +1,53 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 
 public class NoteSpawner : MonoBehaviour
 {
-    public GameObject notePrefab; // Le prefab de la note ®§ g®¶n®¶rer
-    public float speed = 5f;      // Vitesse de d®¶placement de la note
-    public float spawnX = 10f;    // Position X de g®¶n®¶ration (®§ droite de l°Ø®¶cran)
+    public GameObject notePrefab;   // Le prefab de la note √† g√©n√©rer
+    public float speed = 5f;        // Vitesse de d√©placement des notes
+    public float defaultZ = 2.5f;   // Profondeur Z des notes
+    public int laneCount = 3;       // Nombre total de lanes (3 par d√©faut)
 
-    /// <summary>
-    /// G®¶n®¶rer une note en fonction des donn®¶es du chart
-    /// </summary>
+    private float baseY;            // Y de la premi√®re lane (la plus basse)
+    private float laneHeight;       // Distance verticale entre chaque lane
+    private float spawnX;           // Position X calcul√©e automatiquement (bord droit de l‚Äô√©cran)
+
+    void Awake()
+    {
+        Camera cam = Camera.main;
+
+        // Calcul automatique du bord droit de l'√©cran
+        float camWidth = cam.orthographicSize * cam.aspect;
+        spawnX = cam.transform.position.x + camWidth;
+
+        // D√©finir la zone verticale des lanes (adapter √† ta sc√®ne)
+        float minY = 1f;  // Juste au-dessus des arbres
+        float maxY = 4.5f;    // Juste en dessous des nuages
+
+        // Calcul de l'espacement entre lanes
+        laneHeight = (maxY - minY) / (laneCount - 1);
+        baseY = minY;
+    }
+
     public void SpawnNote(NoteData data)
     {
-        // Instancier une nouvelle note
         GameObject noteObj = Instantiate(notePrefab);
 
-        // D®¶finir la position (selon la hauteur d®¶finie dans le chart)
-        noteObj.transform.position = new Vector3(spawnX, data.height, 2.5f);
+        // Calculer la position verticale (lane ‚Üí Y)
+        float yPos = baseY + (data.lane * laneHeight);
 
-        // Initialiser la longueur et la vitesse de la note
+        // D'abord placer la note au bord droit, avant l'initialisation
+        noteObj.transform.position = new Vector3(spawnX, yPos, defaultZ);
+
+        // Initialisation (peut modifier la taille/longueur de la note)
         Note note = noteObj.GetComponent<Note>();
         note.Init(data.duration, speed);
+
+        // Recalculer la largeur finale apr√®s Init()
+        BoxCollider box = noteObj.GetComponent<BoxCollider>();
+        if (box != null)
+        {
+            float finalWidth = box.size.x * noteObj.transform.lossyScale.x;
+            noteObj.transform.position = new Vector3(spawnX + finalWidth / 2f, yPos, defaultZ);
+        }
     }
 }
-

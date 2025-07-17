@@ -1,63 +1,52 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
+using TMPro;
 
 public class JudgementLine : MonoBehaviour
 {
-    public string ballTag = "Ball";  // Tag de la balle pour la trouver automatiquement
-    public float heightTolerance = 0.5f; // Tol®¶rance de hauteur
+    public TextMeshProUGUI scoreText;    // Texte pour le score
+    public TextMeshProUGUI comboText;    // Texte pour le combo
 
-    private Transform ball;          // R®¶f®¶rence ®§ la balle
-    private Note currentNote;
-    private float stayTime = 0f;
+    private Transform ball;              // Balle actuelle
+    private Note currentNote;            // Note en cours de jugement
+    private float stayTime = 0f;         // Temps pass√© sur la ligne
+    private int score = 0;
+    private int combo = 0;
 
-    void Start()
+    public void SetBall(Transform newBall)
     {
-        // Trouver la balle dynamiquement au lancement
-        GameObject ballObj = GameObject.FindGameObjectWithTag(ballTag);
-        if (ballObj != null)
-        {
-            ball = ballObj.transform;
-        }
-        else
-        {
-            Debug.LogWarning("Balle non trouv®¶e, v®¶rifiez le tag !");
-        }
+        ball = newBall;
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Note"))
         {
             currentNote = other.GetComponent<Note>();
             stayTime = 0f;
-            Debug.Log("D®¶but du jugement : " + other.name);
         }
     }
 
-    private void OnTriggerStay(Collider other)
+    void OnTriggerStay(Collider other)
     {
-        if (currentNote != null && ball != null && other.CompareTag("Note"))
+        if (other.CompareTag("Note") && currentNote != null)
         {
-            float ballY = ball.position.y;
-            float noteY = currentNote.transform.position.y;
-
-            if (Mathf.Abs(ballY - noteY) <= heightTolerance)
-            {
-                stayTime += Time.deltaTime;
-            }
+            stayTime += Time.deltaTime;
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Note") && currentNote != null)
         {
             if (stayTime >= currentNote.Duration)
             {
-                Debug.Log("Note longue r®¶ussie !");
+                Debug.Log("Parfait !");
+                AddScore();
             }
             else
             {
-                Debug.Log("Note longue ®¶chou®¶e !");
+                Debug.Log("√âchec !");
+                ResetCombo();
             }
 
             currentNote = null;
@@ -65,8 +54,25 @@ public class JudgementLine : MonoBehaviour
         }
     }
 
-    public void SetBall(Transform newBall)
+    void AddScore()
     {
-        ball = newBall;
+        score += 1;
+        combo += 1;
+
+        if (scoreText != null)
+            scoreText.text = "Score : " + score;
+
+        if (combo >= 2 && comboText != null)
+        {
+            comboText.gameObject.SetActive(true);
+            comboText.text = $"Combo x{combo}";
+        }
+    }
+
+    void ResetCombo()
+    {
+        combo = 0;
+        if (comboText != null)
+            comboText.gameObject.SetActive(false);
     }
 }
