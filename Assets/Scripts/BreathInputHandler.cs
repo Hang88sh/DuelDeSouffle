@@ -90,34 +90,36 @@ public class BreathInputHandler : MonoBehaviour
     {
         if (ballRb == null || timeSinceSpawn < activationDelay) return;
 
-        // Vérifie si le souffle est encore actif (avec période de grâce)
         bool isStillBreathing = timeSinceLastValidInput < stopGracePeriod;
 
         if (isStillBreathing)
         {
-            // Coefficient d’amplification
-            float forceMultiplier = 25f;
-
-            // Vitesse cible à appliquer
             float targetVelocity;
 
-            // Zone de stabilité : souffle confortable = vitesse constante
-            if (breathStrength > 0.45f && breathStrength < 0.55f)
+            // Convertit le souffle en valeur brute (10 ~ 20) pour décider des zones
+            float rawValue = Mathf.Lerp(10f, 20f, breathStrength);
+
+            if (rawValue >= 13f && rawValue <= 18f)
             {
-                targetVelocity = 10f; // vitesse fixe dans la zone stable
+                // Zone stable : souffle confortable → vitesse constante
+                targetVelocity = 10f;
             }
-            else
+            else if (rawValue < 13f)
             {
-                targetVelocity = breathStrength * forceMultiplier; // vitesse normale
+                // En dessous : interpole progressivement vers 10
+                float t = Mathf.InverseLerp(10f, 13f, rawValue);
+                targetVelocity = Mathf.Lerp(0f, 10f, t); // montée douce
+            }
+            else // rawValue > 18f
+            {
+                // Au-dessus : interpole de 10 à une vitesse plus forte (par exemple 16)
+                float t = Mathf.InverseLerp(18f, 20f, rawValue);
+                targetVelocity = Mathf.Lerp(10f, 16f, t); // montée contrôlée
             }
 
-            // Vitesse actuelle du Rigidbody
+            // Lissage de la transition
             Vector3 currentVelocity = ballRb.linearVelocity;
-
-            // Interpolation vers la vitesse cible (lissage)
             float smoothedY = Mathf.MoveTowards(currentVelocity.y, targetVelocity, Time.deltaTime * 50f);
-
-            // Applique la nouvelle vitesse
             currentVelocity.y = smoothedY;
             ballRb.linearVelocity = currentVelocity;
         }

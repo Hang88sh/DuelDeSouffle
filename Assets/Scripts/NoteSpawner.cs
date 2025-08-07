@@ -24,8 +24,8 @@ public class NoteSpawner : MonoBehaviour
         spawnX = cam.transform.position.x + largeurCamera + 1f; // Décalage supplémentaire pour plus de fluidité
 
         // Définir la plage verticale des lanes
-        float minY = 1f;       // Juste au-dessus des arbres
-        float maxY = 4.5f;     // Juste en dessous des nuages
+        float minY = 1.5f;       // Juste au-dessus des arbres
+        float maxY = 3.5f;     // Juste en dessous des nuages
 
         // Calcul de l'espacement vertical entre les lanes
         laneHeight = (maxY - minY) / (laneCount - 1);
