@@ -357,6 +357,7 @@ GameObject:
   - component: {fileID: 293443581}
   - component: {fileID: 293443582}
   - component: {fileID: 293443583}
+  - component: {fileID: 293443584}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -556,10 +557,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ballRb: {fileID: 293443576}
-  maxUpForce: 50
+  maxUpVelocity: 8
+  activationDelay: 0.5
   increaseSpeed: 1
   decreaseSpeed: 1
-  breathSlider: {fileID: 2138236736}
+  roundGauge: {fileID: 0}
+  persistentText: {fileID: 0}
+--- !u!114 &293443584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 293443575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bc5f48af2cffd747a079fe8c632e2c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  portName: COM1
+  baudRate: 9600
+  messageListener: {fileID: 0}
+  reconnectionDelay: 1000
+  maxUnreadMessages: 1
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1800,10 +1820,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ballRb: {fileID: 1421982361}
-  maxUpForce: 50
+  maxUpVelocity: 8
+  activationDelay: 0.5
   increaseSpeed: 1
   decreaseSpeed: 1
-  breathSlider: {fileID: 1128103086}
+  roundGauge: {fileID: 0}
+  persistentText: {fileID: 0}
 --- !u!114 &1421982368
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,0 +1,150 @@
+{
+  "languages": [
+    {
+      "code": "fr",
+      "entries": [
+        {
+          "key": "play",
+          "value": "Jouer"
+        },
+        {
+          "key": "menu_start",
+          "value": "Commencer"
+        },
+        {
+          "key": "settings",
+          "value": "Paramètres"
+        },
+        {
+          "key": "quit",
+          "value": "Quitter"
+        },
+        {
+          "key": "back",
+          "value": "Retour"
+        },
+        {
+          "key": "language",
+          "value": "Langue"
+        },
+        {
+          "key": "volume",
+          "value": "Volume"
+        },
+        {
+          "key": "level_select",
+          "value": "Sélectionner un niveau"
+        },
+        {
+          "key": "start",
+          "value": "C'est parti !"
+        },
+        {
+          "key": "countdown_3",
+          "value": "3"
+        },
+        {
+          "key": "countdown_2",
+          "value": "2"
+        },
+        {
+          "key": "countdown_1",
+          "value": "1"
+        },
+        {
+          "key": "too_weak",
+          "value": "Trop faible !"
+        },
+        {
+          "key": "perfect",
+          "value": "Parfait !"
+        },
+        {
+          "key": "too_strong",
+          "value": "Trop fort !"
+        },
+        {
+          "key": "combo",
+          "value": "Combo"
+        },
+        {
+          "key": "score",
+          "value": "Score"
+        }
+      ]
+    },
+    {
+      "code": "en",
+      "entries": [
+        {
+          "key": "play",
+          "value": "Play"
+        },
+        {
+          "key": "menu_start",
+          "value": "Start"
+        },
+        {
+          "key": "settings",
+          "value": "Settings"
+        },
+        {
+          "key": "quit",
+          "value": "Quit"
+        },
+        {
+          "key": "back",
+          "value": "Back"
+        },
+        {
+          "key": "language",
+          "value": "Language"
+        },
+        {
+          "key": "volume",
+          "value": "Volume"
+        },
+        {
+          "key": "level_select",
+          "value": "Select Level"
+        },
+        {
+          "key": "start",
+          "value": "Let's go!"
+        },
+        {
+          "key": "countdown_3",
+          "value": "3"
+        },
+        {
+          "key": "countdown_2",
+          "value": "2"
+        },
+        {
+          "key": "countdown_1",
+          "value": "1"
+        },
+        {
+          "key": "too_weak",
+          "value": "Too weak!"
+        },
+        {
+          "key": "perfect",
+          "value": "Perfect!"
+        },
+        {
+          "key": "too_strong",
+          "value": "Too strong!"
+        },
+        {
+          "key": "combo",
+          "value": "Combo"
+        },
+        {
+          "key": "score",
+          "value": "Score"
+        }
+      ]
+    }
+  ]
+}

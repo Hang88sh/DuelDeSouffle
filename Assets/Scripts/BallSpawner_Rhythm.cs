@@ -48,7 +48,18 @@ public class BallSpawner_Rhythm : MonoBehaviour
             }
         }
 
-        // ★ Envoyer la balle à la ligne de jugement
+        //Ajouter SerialController s'il n'est pas déjà présent
+        SerialController serial = newBall.GetComponent<SerialController>();
+        if (serial == null)
+        {
+            serial = newBall.AddComponent<SerialController>();
+        }
+
+        // Initialiser le champ messageListener automatiquement
+        serial.messageListener = newBall;
+
+
+        //Envoyer la balle à la ligne de jugement
         if (judgementLine != null)
         {
             judgementLine.SendMessage("SetBall", newBall.transform);

@@ -837,7 +837,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -1162,6 +1162,50 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &497468136
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 497468138}
+  - component: {fileID: 497468137}
+  m_Layer: 0
+  m_Name: SceneLanguageLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &497468137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 497468136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a4bbef06e01a974ca04477bbdaf3321, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &497468138
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 497468136}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.45946, y: -1.44338, z: 2.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &651283327
 GameObject:
   m_ObjectHideFlags: 0
@@ -1691,8 +1735,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 0fa847439a7d341419067387a8436999, type: 3}
-  m_Resource: {fileID: 8300000, guid: 0fa847439a7d341419067387a8436999, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 9e8a821f4c1604046aa1bdacf22df9e6, type: 3}
+  m_Resource: {fileID: 8300000, guid: 9e8a821f4c1604046aa1bdacf22df9e6, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -2097,7 +2141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicSource: {fileID: 988900984}
-  chartJSON: {fileID: 4900000, guid: 0fcf8875115ac304c88363d878a35dd3, type: 3}
+  chartJSON: {fileID: 4900000, guid: a64131214c1377b4ca1439286e6622f9, type: 3}
   noteSpawner: {fileID: 1675839376}
 --- !u!4 &1354693067
 Transform:
@@ -2687,7 +2731,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   notePrefab: {fileID: 1815933435534038640, guid: b7aef42d2874fea4ab82c993efc469f9, type: 3}
-  speed: 5
+  tempsTrajet: 2
   defaultZ: 2.5
   laneCount: 3
 --- !u!4 &1675839377
@@ -2820,7 +2864,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1854997804
 Transform:
   m_ObjectHideFlags: 0
@@ -3245,3 +3289,4 @@ SceneRoots:
   - {fileID: 1354693067}
   - {fileID: 1379482159}
   - {fileID: 1001499585}
+  - {fileID: 497468138}

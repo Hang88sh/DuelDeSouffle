@@ -5,33 +5,47 @@ using TMPro;
 public class RhythmGameManager : MonoBehaviour
 {
     [Header("R¨¦f¨¦rences")]
-    public BallSpawner_Rhythm ballSpawner;      // G¨¦n¨¦rateur de balle pour le mode rythme
-    public MusicTimelineManager musicTimeline;  // Gestionnaire du timeline musical
-    public TextMeshProUGUI countdownText;       // Texte pour le compte ¨¤ rebours
+    public BallSpawner_Rhythm ballSpawner;        // G¨¦n¨¦rateur de balle pour le mode rythme
+    public MusicTimelineManager musicTimeline;    // Gestionnaire du timeline musical
+    public TextMeshProUGUI countdownText;         // Texte pour le compte ¨¤ rebours
 
     void Start()
     {
+        if (LocalizationManager.Instance == null)
+        {
+            GameObject loc = Instantiate(Resources.Load<GameObject>("LocalizationManager"));
+            loc.name = "LocalizationManager";             
+        }
         StartCoroutine(StartCountdownRoutine());
     }
 
     IEnumerator StartCountdownRoutine()
     {
+        // Affiche le texte de compte ¨¤ rebours
         countdownText.gameObject.SetActive(true);
 
-        yield return AnimateCountdown("3");
-        yield return AnimateCountdown("2");
-        yield return AnimateCountdown("1");
-        yield return AnimateCountdown("C'est parti !");
+        // R¨¦cup¨¨re les traductions depuis le gestionnaire de localisation
+        string text3 = LocalizationManager.Instance.GetText("countdown_3");
+        string text2 = LocalizationManager.Instance.GetText("countdown_2");
+        string text1 = LocalizationManager.Instance.GetText("countdown_1");
+        string startText = LocalizationManager.Instance.GetText("start");
 
+        // Lance les animations une par une
+        yield return AnimateCountdown(text3);
+        yield return AnimateCountdown(text2);
+        yield return AnimateCountdown(text1);
+        yield return AnimateCountdown(startText);
+
+        // Cache le texte apr¨¨s le d¨¦but du jeu
         countdownText.gameObject.SetActive(false);
 
-        // G¨¦n¨¦rer la balle
+        // G¨¦n¨¨re la balle
         if (ballSpawner != null)
         {
             ballSpawner.SpawnNewBall();
         }
 
-        // Lancer le timeline musical
+        // D¨¦marre le timeline musical
         if (musicTimeline != null)
         {
             musicTimeline.StartTimeline();
@@ -45,6 +59,8 @@ public class RhythmGameManager : MonoBehaviour
 
         float t = 0f;
         float duration = 0.5f;
+
+        // Animation : agrandissement
         while (t < duration)
         {
             float scale = Mathf.SmoothStep(0.5f, 1.5f, t / duration);
@@ -52,10 +68,11 @@ public class RhythmGameManager : MonoBehaviour
             t += Time.deltaTime;
             yield return null;
         }
-        countdownText.transform.localScale = Vector3.one * 1.5f;
 
+        countdownText.transform.localScale = Vector3.one * 1.5f;
         yield return new WaitForSeconds(0.2f);
 
+        // Animation : retour ¨¤ l'¨¦chelle normale
         t = 0f;
         duration = 0.3f;
         while (t < duration)
@@ -65,8 +82,8 @@ public class RhythmGameManager : MonoBehaviour
             t += Time.deltaTime;
             yield return null;
         }
-        countdownText.transform.localScale = Vector3.one;
 
+        countdownText.transform.localScale = Vector3.one;
         yield return new WaitForSeconds(0.2f);
     }
 }

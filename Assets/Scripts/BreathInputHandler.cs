@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class BreathInputHandler : MonoBehaviour
 {
@@ -14,28 +15,26 @@ public class BreathInputHandler : MonoBehaviour
     public float decreaseSpeed = 1f; // Vitesse de descente
 
     [Header("Interface utilisateur")]
-    //public Slider breathSlider; // Ancien slider linéaire
-    //public Image gaugeFillImage; // Jauge circulaire
-    public ImgsFillDynamic roundGauge;
+    public ImgsFillDynamic roundGauge; // Jauge circulaire
+    public PersistentBreathText persistentText; // Texte persistant de feedback
 
     private float breathStrength = 0f; // Intensité du souffle [0–1]
     private bool isBlowing = false; // Statut de souffle
-    private float timeSinceSpawn = 0f; // Temps depuis apparition
-
-    private float stopGracePeriod = 0.15f; // Temps de tolérance post-souffle
+    private float timeSinceSpawn = 0f; // Temps depuis l’apparition
+    private float stopGracePeriod = 0.15f; // Tolérance après arrêt du souffle
     private float timeSinceLastValidInput = 999f;
-
-    public PersistentBreathText persistentText;
-    private string lastPhase = "";
-
     private bool forceAppliedThisBreath = false;
-    
 
+    private string lastPhase = ""; // Dernière phase affichée
+
+    // Ajout : clés de traduction à utiliser
+    private string keyTooWeak = "too_weak";
+    private string keyTooStrong = "too_strong";
+    private string keyPerfect = "perfect";
 
     public void OnBlow(InputAction.CallbackContext context)
     {
         isBlowing = context.performed;
-
         if (isBlowing)
         {
             forceAppliedThisBreath = false;
@@ -67,7 +66,7 @@ public class BreathInputHandler : MonoBehaviour
         UpdateUI();
     }
 
-    // Mise à jour de l’intensité du souffle selon l’entrée simulée
+    // Met à jour l’intensité du souffle (entrée simulée ou réelle)
     void UpdateBreathStrength()
     {
         float raw = breathStrength * 10f + 10f;
@@ -77,7 +76,7 @@ public class BreathInputHandler : MonoBehaviour
         breathStrength = Mathf.Clamp01(breathStrength);
     }
 
-    // Gère le temps de grâce pour ne pas couper le souffle trop brutalement
+    // Gère le temps de grâce après arrêt du souffle
     void UpdateBreathStatus()
     {
         if (isBlowing)
@@ -86,34 +85,45 @@ public class BreathInputHandler : MonoBehaviour
             timeSinceLastValidInput += Time.deltaTime;
     }
 
-    // Applique une vitesse initiale une seule fois par souffle
+    // Applique une vitesse de montée à la balle
     void ApplyBreathVelocity()
     {
-        if (ballRb == null || timeSinceSpawn < activationDelay)
-            return;
+        if (ballRb == null || timeSinceSpawn < activationDelay) return;
 
+        // Vérifie si le souffle est encore actif (avec période de grâce)
         bool isStillBreathing = timeSinceLastValidInput < stopGracePeriod;
 
         if (isStillBreathing)
         {
-            float targetVelocity = Mathf.Lerp(0f, maxUpVelocity, breathStrength);
-            Vector3 velocity = ballRb.linearVelocity;
-            velocity.y = targetVelocity;
-            ballRb.linearVelocity = velocity;
+            // Coefficient d’amplification
+            float forceMultiplier = 25f;
+
+            // Vitesse cible à appliquer
+            float targetVelocity;
+
+            // Zone de stabilité : souffle confortable = vitesse constante
+            if (breathStrength > 0.45f && breathStrength < 0.55f)
+            {
+                targetVelocity = 10f; // vitesse fixe dans la zone stable
+            }
+            else
+            {
+                targetVelocity = breathStrength * forceMultiplier; // vitesse normale
+            }
+
+            // Vitesse actuelle du Rigidbody
+            Vector3 currentVelocity = ballRb.linearVelocity;
+
+            // Interpolation vers la vitesse cible (lissage)
+            float smoothedY = Mathf.MoveTowards(currentVelocity.y, targetVelocity, Time.deltaTime * 50f);
+
+            // Applique la nouvelle vitesse
+            currentVelocity.y = smoothedY;
+            ballRb.linearVelocity = currentVelocity;
         }
     }
 
-    // Met à jour la jauge visuelle (slider ou cercle)
-    void UpdateUI()
-    {
-        if (roundGauge == null) return;
-
-        bool isStillBreathing = timeSinceLastValidInput < stopGracePeriod;
-        float displayValue = isStillBreathing ? breathStrength : 0f;
-
-        roundGauge.SetValue(displayValue, true);
-    }
-
+    // Affiche le texte correspondant à la zone de souffle
     void UpdateBreathZoneText()
     {
         if (persistentText == null) return;
@@ -124,7 +134,6 @@ public class BreathInputHandler : MonoBehaviour
 
         if (breathStrength < 0.05f && timeSinceLastValidInput > 1f)
         {
-            //Trop de temps sans souffle → masquer le texte
             persistentText.gameObject.SetActive(false);
             lastPhase = "";
             return;
@@ -132,19 +141,19 @@ public class BreathInputHandler : MonoBehaviour
 
         if (breathStrength < 0.3f)
         {
-            phase = "Trop faible !";
+            phase = LocalizationManager.Instance.GetText(keyTooWeak); // Trop faible
             color = Color.yellow;
             offset = -15f;
         }
         else if (breathStrength > 0.8f)
         {
-            phase = "Trop fort !";
+            phase = LocalizationManager.Instance.GetText(keyTooStrong); // Trop fort
             color = Color.red;
             offset = 20f;
         }
         else
         {
-            phase = "Parfait !";
+            phase = LocalizationManager.Instance.GetText(keyPerfect); // Parfait
             color = Color.green;
             offset = 0f;
         }
@@ -157,7 +166,18 @@ public class BreathInputHandler : MonoBehaviour
         }
     }
 
-    // Réception des messages du capteur ou simulateur de souffle
+    // Met à jour la jauge circulaire visuelle
+    void UpdateUI()
+    {
+        if (roundGauge == null) return;
+
+        bool isStillBreathing = timeSinceLastValidInput < stopGracePeriod;
+        float displayValue = isStillBreathing ? breathStrength : 0f;
+
+        roundGauge.SetValue(displayValue, true);
+    }
+
+    // Réception de message via capteur (USB/port série)
     public void OnMessageArrived(string msg)
     {
         if (float.TryParse(msg, out float value) && value > 0)
