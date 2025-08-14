@@ -8,9 +8,9 @@ public class NoteSpawner : MonoBehaviour
     public int laneCount = 3;            // Nombre total de lanes (3 par défaut)
 
     private float baseY;                 // Position Y de la première lane (la plus basse)
-    private float laneHeight;            // Distance verticale entre chaque lane
-    private float spawnX;                // Position X de génération (bord droit de l'écran)
-    private float positionJugementX;     // Position X de la ligne de jugement
+    private float laneHeight;           // Distance verticale entre chaque lane
+    private float spawnX;               // Position X de génération (bord droit de l'écran)
+    private float positionJugementX;    // Position X de la ligne de jugement
 
     void Awake()
     {
@@ -24,8 +24,8 @@ public class NoteSpawner : MonoBehaviour
         spawnX = cam.transform.position.x + largeurCamera + 1f; // Décalage supplémentaire pour plus de fluidité
 
         // Définir la plage verticale des lanes
-        float minY = 1.5f;       // Juste au-dessus des arbres
-        float maxY = 3.5f;     // Juste en dessous des nuages
+        float minY = 0.5f;       // Juste au-dessus des arbres
+        float maxY = 2f;         // Juste en dessous des nuages
 
         // Calcul de l'espacement vertical entre les lanes
         laneHeight = (maxY - minY) / (laneCount - 1);
@@ -35,6 +35,9 @@ public class NoteSpawner : MonoBehaviour
     public void SpawnNote(NoteData data)
     {
         GameObject noteObj = Instantiate(notePrefab);
+
+        // Forcer le tag pour assurer que la détection fonctionne
+        noteObj.tag = "Note"; // ← ligne ajoutée
 
         // Calcul de la position verticale selon la lane
         float yPos = baseY + (data.lane * laneHeight);

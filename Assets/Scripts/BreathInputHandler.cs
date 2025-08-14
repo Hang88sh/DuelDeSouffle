@@ -6,77 +6,68 @@ using TMPro;
 public class BreathInputHandler : MonoBehaviour
 {
     [Header("Physique")]
-    public Rigidbody ballRb; // Rigidbody de la balle
-    public float maxUpVelocity = 8f; // Vitesse maximale de montée
-    public float activationDelay = 0.5f; // Délai avant activation
-
-    [Header("Entrée simulée")]
-    public float increaseSpeed = 1f; // Vitesse de montée du souffle simulé
-    public float decreaseSpeed = 1f; // Vitesse de descente
+    public Rigidbody ballRb;                   // Rigidbody de la balle
+    public float maxUpVelocity = 20f;          // Vitesse maximale vers le haut
+    public float activationDelay = 0.5f;       // Délai d’activation après l’apparition
 
     [Header("Interface utilisateur")]
-    public ImgsFillDynamic roundGauge; // Jauge circulaire
-    public PersistentBreathText persistentText; // Texte persistant de feedback
+    public ImgsFillDynamic roundGauge;         // Jauge circulaire de souffle
+    public PersistentBreathText persistentText;// Texte persistant ("trop fort", etc.)
 
-    private float breathStrength = 0f; // Intensité du souffle [0–1]
-    private bool isBlowing = false; // Statut de souffle
-    private float timeSinceSpawn = 0f; // Temps depuis l’apparition
-    private float stopGracePeriod = 0.15f; // Tolérance après arrêt du souffle
+    [Header("Entrée simulée")]
+    public float increaseSpeed = 1f;           // Vitesse d’augmentation du souffle
+    public float decreaseSpeed = 1f;           // Vitesse de diminution du souffle
+
+    private float breathStrength = 0f;         // Force de souffle lissée (0–1)
+    private float smoothedBreath = 0f;         // Souffle lissé (pour affichage/UI)
+    private float lastRawBreathValue = 0f;     // Dernière valeur brute reçue du capteur
+    private bool isBlowing = false;            // Indique si le joueur souffle actuellement
+
+    private float timeSinceSpawn = 0f;         // Temps écoulé depuis la génération
+    private float stopGracePeriod = 0.5f;      // Période de grâce sans souffle
     private float timeSinceLastValidInput = 999f;
-    private bool forceAppliedThisBreath = false;
 
-    private string lastPhase = ""; // Dernière phase affichée
-
-    // Ajout : clés de traduction à utiliser
+    private string lastPhase = "";
     private string keyTooWeak = "too_weak";
     private string keyTooStrong = "too_strong";
     private string keyPerfect = "perfect";
 
-    public void OnBlow(InputAction.CallbackContext context)
-    {
-        isBlowing = context.performed;
-        if (isBlowing)
-        {
-            forceAppliedThisBreath = false;
-        }
-    }
-
     void Start()
     {
-        breathStrength = 0f;
         isBlowing = false;
+        breathStrength = 0f;
+        smoothedBreath = 0f;
         timeSinceSpawn = 0f;
         timeSinceLastValidInput = 999f;
-        forceAppliedThisBreath = false;
+
+        Physics.gravity = new Vector3(0f, -6.5f, 0f);
+
+        if (ballRb != null)
+        {
+            ballRb.linearDamping = 1.5f; 
+        }
 
         if (persistentText != null)
-        {
-            persistentText.gameObject.SetActive(false); // Masquer au démarrage
-        }
+            persistentText.gameObject.SetActive(false);
     }
 
     void Update()
     {
         timeSinceSpawn += Time.deltaTime;
 
-        UpdateBreathStrength();
-        UpdateBreathStatus();
-        ApplyBreathVelocity();
-        UpdateBreathZoneText();
-        UpdateUI();
+        UpdateSmoothedBreath();       // Lissage du souffle
+        UpdateBreathStatus();         // Statut de souffle (actif ou non)
+        ApplyBreathVelocity();        // Appliquer la force à la balle
+        UpdateBreathZoneText();       // Affichage du texte indicatif
+        UpdateUI();                   // Mise à jour de la jauge
     }
 
-    // Met à jour l’intensité du souffle (entrée simulée ou réelle)
-    void UpdateBreathStrength()
+    void UpdateSmoothedBreath()
     {
-        float raw = breathStrength * 10f + 10f;
-        float target = isBlowing ? 20f : 10f;
-        float moved = Mathf.MoveTowards(raw, target, Time.deltaTime * (isBlowing ? increaseSpeed : decreaseSpeed) * 10f);
-        breathStrength = Mathf.InverseLerp(10f, 20f, moved);
-        breathStrength = Mathf.Clamp01(breathStrength);
+        float speed = (breathStrength > smoothedBreath) ? increaseSpeed : decreaseSpeed;
+        smoothedBreath = Mathf.MoveTowards(smoothedBreath, breathStrength, Time.deltaTime * speed);
     }
 
-    // Gère le temps de grâce après arrêt du souffle
     void UpdateBreathStatus()
     {
         if (isBlowing)
@@ -85,77 +76,60 @@ public class BreathInputHandler : MonoBehaviour
             timeSinceLastValidInput += Time.deltaTime;
     }
 
-    // Applique une vitesse de montée à la balle
     void ApplyBreathVelocity()
     {
         if (ballRb == null || timeSinceSpawn < activationDelay) return;
 
         bool isStillBreathing = timeSinceLastValidInput < stopGracePeriod;
+        if (!isStillBreathing || breathStrength <= 0f) return;
 
-        if (isStillBreathing)
-        {
-            float targetVelocity;
+        // --- Paramètres de force ---
+        float forcePower = 8f;            // Multiplicateur de force principale
+        float minForce = 1.5f;            // Force minimale (permet de faire bouger la balle même avec un petit souffle)
+        float currentY = ballRb.linearVelocity.y;
 
-            // Convertit le souffle en valeur brute (10 ~ 20) pour décider des zones
-            float rawValue = Mathf.Lerp(10f, 20f, breathStrength);
+        if (currentY >= maxUpVelocity) return; // Ne pas dépasser la vitesse max
 
-            if (rawValue >= 13f && rawValue <= 18f)
-            {
-                // Zone stable : souffle confortable → vitesse constante
-                targetVelocity = 10f;
-            }
-            else if (rawValue < 13f)
-            {
-                // En dessous : interpole progressivement vers 10
-                float t = Mathf.InverseLerp(10f, 13f, rawValue);
-                targetVelocity = Mathf.Lerp(0f, 10f, t); // montée douce
-            }
-            else // rawValue > 18f
-            {
-                // Au-dessus : interpole de 10 à une vitesse plus forte (par exemple 16)
-                float t = Mathf.InverseLerp(18f, 20f, rawValue);
-                targetVelocity = Mathf.Lerp(10f, 16f, t); // montée contrôlée
-            }
-
-            // Lissage de la transition
-            Vector3 currentVelocity = ballRb.linearVelocity;
-            float smoothedY = Mathf.MoveTowards(currentVelocity.y, targetVelocity, Time.deltaTime * 50f);
-            currentVelocity.y = smoothedY;
-            ballRb.linearVelocity = currentVelocity;
-        }
+        // --- Calcul de la force vers le haut ---
+        float upwardForce = breathStrength * forcePower + minForce;
+        ballRb.AddForce(Vector3.up * upwardForce, ForceMode.Force);
     }
 
-    // Affiche le texte correspondant à la zone de souffle
     void UpdateBreathZoneText()
     {
         if (persistentText == null) return;
+
+        bool isStillBreathing = timeSinceLastValidInput < stopGracePeriod;
+
+        if (!isStillBreathing || smoothedBreath < 0.05f)
+        {
+            if (persistentText.gameObject.activeSelf)
+            {
+                persistentText.gameObject.SetActive(false);
+                lastPhase = "";
+            }
+            return;
+        }
 
         string phase = "";
         Color color = Color.white;
         float offset = 0f;
 
-        if (breathStrength < 0.05f && timeSinceLastValidInput > 1f)
+        if (smoothedBreath < 0.3f)
         {
-            persistentText.gameObject.SetActive(false);
-            lastPhase = "";
-            return;
-        }
-
-        if (breathStrength < 0.3f)
-        {
-            phase = LocalizationManager.Instance.GetText(keyTooWeak); // Trop faible
+            phase = LocalizationManager.Instance.GetText(keyTooWeak);
             color = Color.yellow;
             offset = -15f;
         }
-        else if (breathStrength > 0.8f)
+        else if (smoothedBreath > 0.8f)
         {
-            phase = LocalizationManager.Instance.GetText(keyTooStrong); // Trop fort
+            phase = LocalizationManager.Instance.GetText(keyTooStrong);
             color = Color.red;
             offset = 20f;
         }
         else
         {
-            phase = LocalizationManager.Instance.GetText(keyPerfect); // Parfait
+            phase = LocalizationManager.Instance.GetText(keyPerfect);
             color = Color.green;
             offset = 0f;
         }
@@ -168,44 +142,49 @@ public class BreathInputHandler : MonoBehaviour
         }
     }
 
-    // Met à jour la jauge circulaire visuelle
     void UpdateUI()
     {
         if (roundGauge == null) return;
 
-        bool isStillBreathing = timeSinceLastValidInput < stopGracePeriod;
-        float displayValue = isStillBreathing ? breathStrength : 0f;
-
-        roundGauge.SetValue(displayValue, true);
+        // Affiche la valeur brute même hors zone de souffle valide
+        float uiDisplay = Mathf.InverseLerp(5f, 25f, lastRawBreathValue);
+        roundGauge.SetValue(uiDisplay, true);
     }
 
-    // Réception de message via capteur (USB/port série)
+    // --- Ce bloc NE DOIT PAS être modifié (donné par le dispositif) ---
     public void OnMessageArrived(string msg)
     {
         if (float.TryParse(msg, out float value) && value > 0)
         {
-            if (value < 10f || value > 20f)
+            lastRawBreathValue = value;
+
+            if (value < 10f)
             {
                 isBlowing = false;
-                Debug.Log("Souffle hors plage !");
+                //Debug.Log("Souffle trop faible");
+            }
+            else if (value > 20f)
+            {
+                isBlowing = false;
+                //Debug.Log("Souffle trop fort");
             }
             else
             {
                 isBlowing = true;
                 breathStrength = Mathf.InverseLerp(10f, 20f, value);
-                forceAppliedThisBreath = false;
-                Debug.Log($"Souffle détecté : {value} → intensité = {breathStrength:F2}");
+                //Debug.Log($"Souffle valide: {value} → strength = {breathStrength:F2}");
             }
         }
         else
         {
             isBlowing = false;
-            Debug.LogWarning("Entrée invalide du souffle !");
+            Debug.LogWarning($"Valeur invalide ou nulle reçue: '{msg}'");
         }
+        //Debug.Log($"Souffle valide: {value} → strength = {breathStrength:F2}");
     }
 
     public void OnConnectionEvent(bool success)
     {
-        Debug.Log(success ? "Périphérique connecté" : "Périphérique déconnecté");
+        Debug.Log(success ? "Device connected" : "Device disconnected");
     }
 }

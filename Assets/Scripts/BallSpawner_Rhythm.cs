@@ -60,15 +60,15 @@ public class BallSpawner_Rhythm : MonoBehaviour
 
 
         //Envoyer la balle à la ligne de jugement
-        if (judgementLine != null)
-        {
-            judgementLine.SendMessage("SetBall", newBall.transform);
-            Debug.Log("Balle assignée à la ligne de jugement");
-        }
-        else
-        {
-            Debug.LogWarning("Ligne de jugement non assignée !");
-        }
+        //if (judgementLine != null)
+        //{
+        //    judgementLine.SendMessage("SetBall", newBall.transform);
+        //    Debug.Log("Balle assignée à la ligne de jugement");
+        //}
+        //else
+        //{
+        //    Debug.LogWarning("Ligne de jugement non assignée !");
+        //}
     }
 
     void PlaySpawnEffect(Vector3 position)
